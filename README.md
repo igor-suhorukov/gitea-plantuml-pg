@@ -69,11 +69,29 @@ In your Gitea markdown files, you can create PlantUML diagrams like this:
 ````
 ```plantuml
 @startuml
-Alice -> Bob: Hello
-Bob --> Alice: Hi there
+actor User
+rectangle "openstreetmap_h3" {
+  usecase "Parse Command Line Arguments" as ParseCLI
+  usecase "Validate Input PBF" as ValidatePBF
+  usecase "Process PBF Data" as ProcessPBF
+  usecase "Save transformed data in PostgreSQL, Parquet or Arrow IPC)" as SaveData
+  usecase "Calculate Statistics" as CalculateStats
+  usecase "Shutdown System" as Shutdown
+  ParseCLI --> ValidatePBF
+  ValidatePBF --> ProcessPBF
+  ProcessPBF --> SaveData
+  SaveData --> CalculateStats
+  CalculateStats --> Shutdown
+}
+User --> ParseCLI : "Run OSM PBF file processing"
+User --> SaveData : "Use data"
+User --> CalculateStats : "Use statistics"
 @enduml
 ```
 ````
+
+![image](https://github.com/user-attachments/assets/b9a04e55-43be-4595-bd12-072f68cdec7b)
+
 
 ## Configuration
 
